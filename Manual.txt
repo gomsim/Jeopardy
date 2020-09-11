@@ -1,0 +1,36 @@
+Written by Simon Gombrii
+
+Welcome to Jeopardy! A game of fun and joy!
+
+THE GAME
+Jeopardy is a great twist on a typical quiz. It's a game that lets the game host give the answers while the players ask the questions. 
+
+The game shows a grid of cards. The columns represent categories and the rows represent different levels of difficulty.
+
+Start:
+The starting player is chosen at random. The player then chooses a card of a difficulty of choice from one of the categories. Upon turning the card a statement is presented, representing what would be the answer to an unknown question. The player's job is then to guess what the question to the answer might be. For example, "The jumping man wearing a red hat." might be the answer to "Who is Super Mario?"
+
+Upon turning a card:
+While the choice of card was up to a certain player, any player has the chance to come up with a suggestion. The players have a set amount of time to think. The first player to say their name (or in any way signalling they have an answer, which has been agreed upon beforehand) will get to give their suggestion.
+
+After a card:
+Would the player give the correct suggestion that player recieves the amount of points shown on the question cars backside before turning it. This way the choice of question becomes a balancing act between challenge and reward. However would the player give the wrong suggestion, then the other players have a set amount of time (usually shorter) to come up with their own suggestions. Would no player come up with the right suggestion, either after one player has first tried or without any player getting the chance to try, no one is given points, the answer is revealed, and the game proceeds. The choice of the next card is given to the player who came up with the right suggestion, alternatively if no one got the right suggestion, to the player who chose the last card. Additionally, giving a wrong suggestion subtracts the card's score from the player's score.
+
+The game is played until all cards are turned. The players' scores are then counted. The winner is the player with the highest score.
+
+THE SOFTWARE IMPLEMENTATION
+Jeopardy is designed to detect the number of devices (computer or TV-screens) connected to the computer at start-up. A GUI is created for each device connected. The purpose of this is simply to hide the game host's mouse cursor from the players. 
+Suggestion: The host sits by the screen that the players will watch. The host can then face the players to interact with them easily and pick up on visual ques as to who got to the right suggestion first.
+
+Upon start-up the game board is shown. The cards and categories are pulled from the game.txt file put in the game's directory by the game host prior to start-up.
+
+To turn a question card the host hovers over it with its cursor and clicks. The corresponding clue will then be displayed. Simultaneously a timer will start, shown in the upper right hand corner of the display. The timer can be stopped at any moment by pressing SPACE. Pressing SPACE again starts a new timer with a usually smaller amount of time. To close the card press ENTER.
+
+GAME FILE
+about to change...
+
+TRUBBLESHOOTING
+about to change...
+
+SETTINGS
+about to change...
