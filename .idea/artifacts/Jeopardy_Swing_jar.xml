@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Jeopardy Swing:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Jeopardy_Swing_jar</output-path>
+    <root id="archive" name="Jeopardy Swing.jar">
+      <element id="module-output" name="Jeopardy Swing" />
+    </root>
+  </artifact>
+</component>

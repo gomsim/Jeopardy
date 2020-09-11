@@ -1,0 +1,18 @@
+- Städa koden!
+	- Ta bort ful kod
+	- ta boet oanvända konstanted, variabler och funktioner.
+	- Ta bort bortkommenterad kod
+
+- kommentera koden
+
+- Ta bort buggar eller möjliga felområden
+	- eg. man kan klicka på frågerutor i bakgrunden när en fråga visas.
+
+- Skapa möjligheter att ha en konfigurationsfil, som ställer in:
+	- nedräkningstid för ny fråga.
+	- nedräkningstid för andra försök.
+	- Fontstorlek på rubriker
+
+- Skriv en manual.
+	- kontroller
+	- Om konfigurationsfil.
