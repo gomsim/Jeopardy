@@ -27,7 +27,67 @@ Upon start-up the game board is shown. The cards and categories are pulled from 
 To turn a question card the host hovers over it with its cursor and clicks. The corresponding clue will then be displayed. Simultaneously a timer will start, shown in the upper right hand corner of the display. The timer can be stopped at any moment by pressing SPACE. Pressing SPACE again starts a new timer with a usually smaller amount of time. To close the card press ENTER.
 
 GAME FILE
-about to change...
+For the game to run the directory containing the "Jeopardy Swing.jar" must contain a file game.txt. This file must be written to a very spcific description. One such is supplied in the repo. The game.txt file contains the information about the categories and their corresponding card texts. Categories are stated as *<category> while clues are statet plainly. Every pieve of information in game.txt is separated by a semicolon (;):
+
+--- start of game.txt, excluding this line ---
+*<Category1>;
+<Clue1>.
+    #<Comment>;
+<Clue2>.
+    #<Comment>;
+
+*Zelda;
+<Clue1>.
+    #<Comment>;
+<Clue2>.
+    #<Comment>;
+#<Clue1>. //NOT ADDED TO GAME BECAUSE OF PRECEEDING #
+    #<Comment>;
+--- end of game.txt, excluding this line ---
+
+Eg.
+
+--- start of game.txt, excluding this line ---
+*Sagan om ringen;
+Den plats som Frodo försöker ta sig till i sagan om ringen.
+    #Vad är Mordor;
+Den värd som tar emot Herr ”underhill” och hans vänner i Bri.
+    #Vem är Barliman Butterbur;
+    
+*Zelda;
+En union av styrka, visdom och mod.
+    #Vad är Triforce;
+Links hemort i Ocarina of Time tillika den plats där det stora dekuträdet växer.
+    #Vad är Kokiriskogen;
+#Svärdet som går sönder efter ett litet antal slag.
+    #Vad är Giant's knife;
+--- end of game.txt, excluding this line ---
+
+Every clue statement following a category statement is assumed to correspond to that category. This game.txt file would supply two categories, "Sagan om ringen" and "Zelda", contining two cards each. Category names are preceded by a star (*). Any text to not be present in the actual game is preceded by a number/tag sign (#).
+
+For the game, the file...
+
+*Zelda;
+En union av styrka, visdom och mod.
+    #Vad är Triforce;
+
+...is equal to the line...
+
+*Zelda;
+En union av styrka, visdom och mod.
+
+...or the line...
+
+*Zelda;
+En union av styrka, visdom och mod.#Vad är Triforce;
+
+...or the line...
+
+*Zelda;En union av styrka, visdom och mod.#Vad är Triforce;
+
+...etc. Newlines and tabs are/could be added only for readability.
+
+As such, any numbe of categories and corresponding clues can be added, as long as they follow the given format. Additionally, a number/tag sign (#) can be put before any clue to prevent them from entering the game entirely. The clues will be added to the game in the order they are stated in the game.txt file.
 
 TRUBBLESHOOTING
 about to change...
