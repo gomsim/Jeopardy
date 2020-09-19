@@ -27,14 +27,16 @@ public class MainScreen extends JFrame {
     private String[] categories;
     private QuestionCard cardLastLookedAt;
     private QuestionScreen questionScreenBeingShown;
+    private int titleFontSize;
 
     private QuestionCard[][] questionCards;
 
-    public MainScreen(Program program, String[] categories, int[] categorySizes, int maxCategorySize, GraphicsDevice device){
+    public MainScreen(Program program, String[] categories, int[] categorySizes, int maxCategorySize, GraphicsDevice device, int titleFontSize){
         super(device.getDefaultConfiguration());
         this.program = program;
         this.categories = categories;
         this.questionCards = new QuestionCard[categories.length][maxCategorySize];
+        this.titleFontSize = titleFontSize;
 
         setUpWindow();
 
@@ -61,7 +63,7 @@ public class MainScreen extends JFrame {
         for (int i = 0; i < categories.length; i++){
             JLabel label = new JLabel(categories[i],JLabel.CENTER);
             label.setForeground(TEXT_COLOR);
-            label.setFont(new Font("Areal", Font.BOLD + Font.ITALIC,50));
+            label.setFont(new Font("Areal", Font.BOLD + Font.ITALIC,titleFontSize));
             backPanel.add(label);
         }
     }

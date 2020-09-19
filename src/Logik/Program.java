@@ -2,19 +2,34 @@ package Logik;
 
 import GUI.MainScreen;
 
+import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class Program {
 
-    private static final int QUESTION_TIME = 15;
-    private static final int EXTRA_TIME = 5;
+    private int questionTime;
+    private int extraTime;
 
     private QCardsDB database = new QCardsDB();
     private MainScreen[] graphicalInterfaces;
 
-    public Program(String game){
-        setupDB(game);
-        setupGuis();
+    public Program(String gameFilePath){
+        ConfigFileHandler config = new ConfigFileHandler();
+        questionTime = config.questionTime;
+        extraTime = config.extraTime;
+
+        FileStream fileIterator = null;
+        try{
+            fileIterator = new FileStream(gameFilePath);
+        }catch(IOException e){
+            JOptionPane.showMessageDialog(null,"Spelfil " +
+                    "saknas. Tänk på att spelfilen med namnet \"game.txt\" måste" +
+                    " ligga i samma mapp som jar-filen Jeopardy!","Spelfil " +
+                    "saknas!",JOptionPane.ERROR_MESSAGE);
+        }
+        setupDB(fileIterator);
+        setupGuis(config.titleFontSize);
     }
 
     /* Private methods used during set up */
@@ -22,27 +37,26 @@ public class Program {
     /**
      * Sets up a GUI for each device (computer screen) connected.
      */
-    private void setupGuis(){
+    private void setupGuis(int titleSize){
         graphicalInterfaces = new MainScreen[gameScreens().length];
 
         String[] categories = database.getCategories();
         int[] categorySizes = database.getNumQuestions();
         int maxQuestions = database.getMaxQuestions();
         for (int i = 0; i < graphicalInterfaces.length; i++)
-            graphicalInterfaces[i] = new MainScreen(this, categories, categorySizes, maxQuestions,gameScreens()[i]);
+            graphicalInterfaces[i] = new MainScreen(this, categories, categorySizes, maxQuestions,gameScreens()[i], titleSize);
     }
 
     /**
      * Parses the string representation of the game to be played and stores each
      * question into it's corresponding category to be fetched later.
-     * @param game the string representation of the game to be played.
+     * @param iterator supplying the string representation of the game to be played.
      */
-    private void setupDB(String game){
-        GameStringIterator parser = new GameStringIterator(game);
+    private void setupDB(FileStream iterator){
         String currentCategory = null;
         System.out.println("Questions, if any, not used in the game:");
-        while(parser.hasNext()){
-            String current = parser.next();
+        while(iterator.hasNext()){
+            String current = iterator.next();
             String question = current;
             if (current.contains("#")){
                 question = current.split("#")[0];
@@ -87,7 +101,7 @@ public class Program {
      */
     private void startFirstCountdown(){
         for (MainScreen baby: graphicalInterfaces){
-            baby.showCountdown(QUESTION_TIME);
+            baby.showCountdown(questionTime);
         }
     }
 
@@ -97,7 +111,7 @@ public class Program {
      */
     public void startSecondCountdown(){
         for (MainScreen baby: graphicalInterfaces){
-            baby.showCountdown(EXTRA_TIME);
+            baby.showCountdown(extraTime);
         }
     }
     public void pauseCountdown(){
@@ -115,24 +129,6 @@ public class Program {
     public void closeCard(){
         for (MainScreen baby: graphicalInterfaces){
             baby.closeQuestionOnScreen();
-        }
-    }
-
-
-    private static class GameStringIterator {
-        String[] tokens;
-        int counter;
-
-        GameStringIterator(String gameString){
-            gameString = gameString.replace(System.lineSeparator(),"");
-            tokens = gameString.split(";");
-        }
-
-        private String next(){
-            return tokens[counter++];
-        }
-        private boolean hasNext(){
-            return counter < tokens.length;
         }
     }
 }

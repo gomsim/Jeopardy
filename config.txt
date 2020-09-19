@@ -1,0 +1,3 @@
+questionTime = 15;
+extraTime = 5;
+titleFontSize = 50;
