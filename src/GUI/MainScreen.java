@@ -5,6 +5,7 @@ import Logik.Program;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.util.Random;
 
 /**
@@ -61,9 +62,7 @@ public class MainScreen extends JFrame {
     }
     private void setCategoryTitles(String[] categories, JPanel backPanel){
         for (int i = 0; i < categories.length; i++){
-            JLabel label = new JLabel(categories[i],JLabel.CENTER);
-            label.setForeground(TEXT_COLOR);
-            label.setFont(new Font("Areal", Font.BOLD + Font.ITALIC,titleFontSize));
+            TitleCard label = new TitleCard(categories[i]);
             backPanel.add(label);
         }
     }
@@ -148,9 +147,44 @@ public class MainScreen extends JFrame {
      * however unnecessary, to have categories containing a varying number of questions.
      */
     private static class FillerCard extends JPanel{
-
         private FillerCard(){
             setBackground(new Color(0,0,0,0));
+        }
+    }
+
+    /**
+     * Functions as label to show category titles on. The reason for not just
+     * using JLabels is that tha text has to be transformed (squished) before
+     * rendering if it doesn't fit on the panel.
+     */
+    private static class TitleCard extends JPanel{
+        private String text;
+        private boolean firstTime = true;
+        private int x, y;
+        private static final int MARGIN = 25;
+
+        TitleCard(String text){
+            this.text = text;
+            setBackground(new Color(0,0,0,0));
+            setFont(new Font("Areal", Font.BOLD + Font.ITALIC,50));
+        }
+
+        protected void paintComponent(Graphics graphics){
+            graphics.setColor(TEXT_COLOR);
+            if (firstTime){
+                FontMetrics metrics = getFontMetrics(getFont());
+                int stringWidth = metrics.stringWidth(text);
+                y = getHeight()/2 + metrics.getHeight()/4;
+                x = getWidth()/2 - stringWidth/2;
+                if (stringWidth > getWidth() + MARGIN * 2){
+                    AffineTransform transform = new AffineTransform();
+                    transform.scale((double)(getWidth()-MARGIN*2)/stringWidth,1);
+                    setFont(getFont().deriveFont(transform));
+                    x = MARGIN;
+                }
+                firstTime = false;
+            }
+            graphics.drawString(text,x,y);
         }
     }
     private class CardMouseListener implements MouseListener{
