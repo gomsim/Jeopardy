@@ -23,7 +23,7 @@ public class ConfigFileHandler {
             iterator = new FileStream("config.txt");
             interpretConfigText(iterator);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null,"Konfigurationsfil återskapas från standardvärden.","Konfigurationsfil korrupt eller saknas!",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Konfigurationsfil återskapas från standardvärden.","Konfigurationsfil korrupt eller saknas!",JOptionPane.WARNING_MESSAGE);
             createDefaultConfigFile();
             loadConfigurationFile();
         }
