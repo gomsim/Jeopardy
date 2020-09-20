@@ -8,6 +8,6 @@ import Logik.Program;
 public class Start {
 
     public static void main(String[] args){
-        new Program("game.txt");
+        new Program();
     }
 }

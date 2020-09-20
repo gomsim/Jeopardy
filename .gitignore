@@ -4,4 +4,5 @@ TODO.txt
 Jeopardy Swing.iml
 src/META-INF/
 config.txt
-game.txt
+games/
+*.game

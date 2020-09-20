@@ -98,6 +98,7 @@ public class QuestionScreen extends JPanel {
         return splitHelper(new ArrayList<>(),string,width,metrics);
     }
     private ArrayList<String> splitHelper(ArrayList<String> accumulator, String remainder, int width, FontMetrics metrics){
+        //TODO: If single words in a question are longer than the width, then the function throws a stackOverflowException
         if (metrics.stringWidth(remainder) + 100 < width){
             accumulator.add(remainder);
             return accumulator;

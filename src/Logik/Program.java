@@ -2,9 +2,7 @@ package Logik;
 
 import GUI.MainScreen;
 
-import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 
 public class Program {
 
@@ -14,21 +12,12 @@ public class Program {
     private QCardsDB database = new QCardsDB();
     private MainScreen[] graphicalInterfaces;
 
-    public Program(String gameFilePath){
+    public Program(){
         ConfigFileHandler config = new ConfigFileHandler();
         questionTime = config.questionTime;
         extraTime = config.extraTime;
 
-        FileStream fileIterator = null;
-        try{
-            fileIterator = new FileStream(gameFilePath);
-        }catch(IOException e){
-            JOptionPane.showMessageDialog(null,"Spelfil " +
-                    "saknas. Tänk på att spelfilen med namnet \"game.txt\" måste" +
-                    " ligga i samma mapp som jar-filen Jeopardy!","Spelfil " +
-                    "saknas!",JOptionPane.ERROR_MESSAGE);
-        }
-        setupDB(fileIterator);
+        setupDB(new GameFileHandler().getFileStream());
         setupGuis(config.titleFontSize);
     }
 
