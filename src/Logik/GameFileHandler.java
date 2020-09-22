@@ -7,7 +7,11 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class GameFileHandler {
+/**
+ * Class that reads gamefile of the player's choosing and starts that game.
+ * Can generate a file 'example.game' from EXAMPLE_GAME.
+ */
+class GameFileHandler {
 
     private FileStream fileStream;
 
@@ -37,6 +41,10 @@ public class GameFileHandler {
 
         return choice.toString() + ".game";
     }
+
+    /**
+     * @return a String array representing the game files currently in the games directory.
+     */
     private String[] gamesAsList(){
         File directory = new File("games");
         FilenameFilter filter = (dir,name) -> name.endsWith(".game") && !name.equals("example.game");
@@ -50,7 +58,7 @@ public class GameFileHandler {
 
         return gameFiles;
     }
-
+    
     private void ensureGamesFolder(){
         File directory = new File("games");
         if (!directory.exists())

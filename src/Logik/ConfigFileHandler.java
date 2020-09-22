@@ -4,7 +4,11 @@ import javax.swing.*;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class ConfigFileHandler {
+/**
+ * Class that reads 'config.txt' upon startup and configures the game accordingly.
+ * Recreates a config file from DEFAULT_CONFIG if file is broken or missing.
+ */
+class ConfigFileHandler {
 
     private static final String DEFAULT_CONFIG =
             "questionTime = 15;\n" +

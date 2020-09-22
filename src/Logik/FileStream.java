@@ -5,7 +5,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class FileStream {
+/**
+ * Class that reads a file and provides a stream of words separated by semicolon.
+ * Works like a listIterator.
+ */
+class FileStream {
 
     private String[] tokens;
     private int counter;
