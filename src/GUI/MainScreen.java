@@ -92,10 +92,10 @@ public class MainScreen extends JFrame {
 
         GlassScreen glassScreen = new GlassScreen();
         SwingUtilities.getRootPane(this).setGlassPane(glassScreen);
-        QuestionScreen qs = new QuestionScreen(question, getWidth(), getHeight(),this);
+        QuestionScreen questionScreen = new QuestionScreen(question, getWidth(), getHeight(),this);
         glassScreen.setVisible(true);
-        glassScreen.add(qs);
-        questionScreenBeingShown = qs;
+        glassScreen.add(questionScreen);
+        questionScreenBeingShown = questionScreen;
     }
     public void closeQuestionScreen(){
         questionScreenBeingShown.stopCountdown();
@@ -117,19 +117,19 @@ public class MainScreen extends JFrame {
     void secondTimerRequested(){
         program.startSecondCountdown();
     }
-    void timerPaused(){
+    void countdownPaused(){
         program.pauseCountdown();
     }
 
-    /* Private methods and classes moslty used for:
+    /* Private methods and classes mostly used for:
     * 1. Rendering the background
-    * 2. Opening questions on the QuestionScreen
+    * 2. Opening questions onto a QuestionScreen
     * 3. Listening for mouse input
     * 4. Helper methods for coordinating the question cards
     */
 
     /**
-     * Getting the position of the category on the board grid.
+     * Getting the horizontal position of a category on the board grid.
      */
     private int getCategoryPos(String category){
         int result = 0;
@@ -143,7 +143,7 @@ public class MainScreen extends JFrame {
     /**
      * Filler objects used to fill out the board grid in case any categories of
      * questions don't have as many questions as the others. This makes it possible,
-     * however unnecessary, to have categories containing a varying number of questions.
+     * however unnecessary, to have categories of different sizes.
      */
     private static class FillerCard extends JPanel{
         private FillerCard(){
@@ -152,9 +152,9 @@ public class MainScreen extends JFrame {
     }
 
     /**
-     * Functions as label to show category titles on. The reason for not just
-     * using JLabels is that tha text has to be transformed (squished) before
-     * rendering if it doesn't fit on the panel.
+     * Functions as label on which to show category titles. The reason for not
+     * just using JLabels is that tha text has to be transformed (squished)
+     * before rendering in case it doesn't fit on the panel.
      */
     private static class TitleCard extends JPanel{
         private String text;
@@ -211,7 +211,7 @@ public class MainScreen extends JFrame {
             card.setHovered(false);
             setCursor(Cursor.getDefaultCursor());
         }
-        public void mouseClicked(MouseEvent event){}
+        public void mouseClicked(MouseEvent event)/* Do nothing */ {}
     }
 
     /**

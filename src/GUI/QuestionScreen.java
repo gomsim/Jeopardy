@@ -247,7 +247,7 @@ public class QuestionScreen extends JPanel {
             }else if (event.getKeyCode() == KeyEvent.VK_SPACE){
                 System.out.println("SPACE");
                 if (countingDown){
-                    mainScreen.timerPaused();
+                    mainScreen.countdownPaused();
                 }else{
                     stopCountdown();
                     mainScreen.secondTimerRequested();
