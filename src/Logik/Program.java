@@ -18,7 +18,7 @@ public class Program {
         extraTime = config.extraTime;
 
         setupDB(new GameFileHandler().getFileStream());
-        setupGuis(config.titleFontSize);
+        setupGuis();
     }
 
     /* Private methods used during set up */
@@ -26,19 +26,19 @@ public class Program {
     /**
      * Sets up a GUI for each device (computer screen) connected.
      */
-    private void setupGuis(int titleSize){
+    private void setupGuis(){
         graphicalInterfaces = new MainScreen[gameScreens().length];
 
         String[] categories = database.getCategories();
         int[] categorySizes = database.getNumQuestions();
-        int maxQuestions = database.getMaxQuestions();
+        int largestCategorySize = database.getLargestCategorySize();
         for (int i = 0; i < graphicalInterfaces.length; i++)
-            graphicalInterfaces[i] = new MainScreen(this, categories, categorySizes, maxQuestions,gameScreens()[i], titleSize);
+            graphicalInterfaces[i] = new MainScreen(this, categories, categorySizes, largestCategorySize,gameScreens()[i]);
     }
 
     /**
      * Parses the string representation of the game to be played and stores each
-     * question into it's corresponding category to be fetched later.
+     * question into its corresponding category to be fetched later.
      * @param iterator supplying the string representation of the game to be played.
      */
     private void setupDB(FileStream iterator){
@@ -89,8 +89,8 @@ public class Program {
      * The countdown to be used upon showing a question for the first time.
      */
     private void startFirstCountdown(){
-        for (MainScreen baby: graphicalInterfaces){
-            baby.showCountdown(questionTime);
+        for (MainScreen gui: graphicalInterfaces){
+            gui.showCountdown(questionTime);
         }
     }
 
@@ -99,25 +99,25 @@ public class Program {
      * answering the question after one has failed.
      */
     public void startSecondCountdown(){
-        for (MainScreen baby: graphicalInterfaces){
-            baby.showCountdown(extraTime);
+        for (MainScreen gui: graphicalInterfaces){
+            gui.showCountdown(extraTime);
         }
     }
     public void pauseCountdown(){
-        for (MainScreen baby: graphicalInterfaces){
-            baby.pauseCountdown();
+        for (MainScreen gui: graphicalInterfaces){
+            gui.pauseCountdown();
         }
     }
     public void showCard(String category, int question){
         String questionText = database.get(category, question);
-        for (MainScreen baby: graphicalInterfaces){
-            baby.showQuestionScreen(questionText, category, question);
+        for (MainScreen gui: graphicalInterfaces){
+            gui.showQuestionScreen(questionText, category, question);
         }
         startFirstCountdown();
     }
     public void closeCard(){
-        for (MainScreen baby: graphicalInterfaces){
-            baby.closeQuestionOnScreen();
+        for (MainScreen gui: graphicalInterfaces){
+            gui.closeQuestionScreen();
         }
     }
 }

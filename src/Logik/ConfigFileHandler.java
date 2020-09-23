@@ -12,11 +12,9 @@ class ConfigFileHandler {
 
     private static final String DEFAULT_CONFIG =
             "questionTime = 15;\n" +
-            "extraTime = 5;\n" +
-            "titleFontSize = 50;";
+            "extraTime = 5;";
 
     int questionTime, extraTime;
-    int titleFontSize;
 
     ConfigFileHandler(){
         loadConfigurationFile();
@@ -44,9 +42,6 @@ class ConfigFileHandler {
                     break;
                 case "extraTime":
                     extraTime = Integer.parseInt(value);
-                    break;
-                case "titleFontSize":
-                    titleFontSize = Integer.parseInt(value);
                     break;
                 default:
                     throw new IllegalStateException("Invalid field: " + field);

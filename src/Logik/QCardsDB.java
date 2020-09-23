@@ -12,7 +12,7 @@ public class QCardsDB {
             addCategory(category);
         addQuestion(category,question);
     }
-    int getMaxQuestions(){
+    int getLargestCategorySize(){
         return maxNumQuestions;
     }
     int[] getNumQuestions(){

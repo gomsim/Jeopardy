@@ -23,26 +23,25 @@ public class MainScreen extends JFrame {
     static final Color FILLER_COLOR = new Color(247,229,156);
     static final Color TEXT_COLOR = new Color(245,194,66);
     private static final Color NIGHT_SKY_COLOR = new Color(2,82,122);
+    private static final int TITLE_SPACE = 1;
 
     private Program program;
     private String[] categories;
-    private QuestionCard cardLastLookedAt;
+    private QuestionCard cardLastShown;
     private QuestionScreen questionScreenBeingShown;
-    private int titleFontSize;
 
     private QuestionCard[][] questionCards;
 
-    public MainScreen(Program program, String[] categories, int[] categorySizes, int maxCategorySize, GraphicsDevice device, int titleFontSize){
+    public MainScreen(Program program, String[] categories, int[] categorySizes, int maxCategorySize, GraphicsDevice device){
         super(device.getDefaultConfiguration());
         this.program = program;
         this.categories = categories;
         this.questionCards = new QuestionCard[categories.length][maxCategorySize];
-        this.titleFontSize = titleFontSize;
 
         setUpWindow();
 
         //Contents:
-        BackPanel backPanel = new BackPanel(maxCategorySize+1,categories.length);
+        BackPanel backPanel = new BackPanel(maxCategorySize + TITLE_SPACE,categories.length);
         add(backPanel);
         setCategoryTitles(categories, backPanel);
         populateBoard(categorySizes,maxCategorySize,questionCards,backPanel);
@@ -89,7 +88,7 @@ public class MainScreen extends JFrame {
      * Shows a QuestionScreen as an overlay atop this MainScreen.
      */
     public void showQuestionScreen(String question, String category, int y){
-        cardLastLookedAt = questionCards[getCategoryPos(category)][y];
+        cardLastShown = questionCards[getCategoryPos(category)][y];
 
         GlassScreen glassScreen = new GlassScreen();
         SwingUtilities.getRootPane(this).setGlassPane(glassScreen);
@@ -98,9 +97,9 @@ public class MainScreen extends JFrame {
         glassScreen.add(qs);
         questionScreenBeingShown = qs;
     }
-    public void closeQuestionOnScreen(){
+    public void closeQuestionScreen(){
         questionScreenBeingShown.stopCountdown();
-        cardLastLookedAt.setTurned(true);
+        cardLastShown.setTurned(true);
         SwingUtilities.getRootPane(this).getGlassPane().setVisible(false);
     }
     public void showCountdown(int sec){
