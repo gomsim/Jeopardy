@@ -110,3 +110,13 @@ KEYBOARD CONTROLLS
 Enter: closes a question card if shown on the screen.
 Space (once): pauses the coundown timer while a question card is being displayed.
 Space (second time): starts the coundown timer for a small amount of extra time while a question card is being displayed.
+
+TROUBLESHOOT
+The game presents fewer categories than is present in the game file.
+    Answer: Each category myst have a unique name. Any two categories with the same name are treated as the same category.
+The question cars look all mushed up on the main screen.
+    Answer: The game runs best with up to 5 categories.
+The question cards are all thin. I can't read the numbers.
+    Answer: Too many questions in a category will crowd the screen. Try creating games with fewer questions per category. 10 or 15 questions per category is probably the maximum for an enjoyable game.
+Some categories have more questions than others.
+    Answer: Yes. Of some reason the game is designed to accomodate such scenarios. If the game file contains more questions for certain categories than others, those categories will contain more questions during the game. If you want to keep more questions in the game file than what you want to show during a game session, make sure to comment out the questions you don't want to be shown duwing the game. You do this by starting any unwanted question entry with a #-sign. 
