@@ -68,14 +68,11 @@ public class QuestionScreen extends JPanel {
         Font font = new Font("Areal", Font.ITALIC + Font.BOLD,50);
         FontMetrics metrics = getFontMetrics(font);
         int numLines = (metrics.stringWidth(question)+100)/(getWidth()-MARGIN*4) + 1;
-        System.out.println("NUMLINES: " + numLines);
 
         double y = (numLines - 1) * -0.5;
 
         ArrayList<String> lines = split(question,getWidth()-MARGIN*4,metrics);
-
-        System.out.println(lines.size() + " " + numLines + " " + (numLines == lines.size()));
-
+        
         for (int i = 0; i < numLines; i++){
             JLabel label = new JLabel(lines.get(i));
             label.setFont(font);
