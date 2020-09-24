@@ -92,7 +92,17 @@ En union av styrka, visdom och mod.#Vad är Triforce;
 As such, any number of categories and corresponding clues can be added, as long as they follow the given format. Additionally, a number/tag sign (#) can be put before any clue to prevent them from entering the game entirely. The clues will be added to the game in the order they are stated in the game file.
 
 CONFIG FILE
-about to change...
+The game folder contains a file config.txt which lets the host configure aome aspects of the game. As of today those things are only the durations of the two countdowns or time limits present in the game.
 
-TRUBBLESHOOTING
-about to change...
+Each variable in the config file are set in the following format: "[variable] = [value]" excluding the citations.
+
+Variables:
+questionTime - determines the amount of time, in seconds, for the initial countdown upon opening a new question card.
+extraTime - determines the amount of time, in seconds, for the second countdown, activated by pausing the initial countdown and starting it again.
+
+Would the config file be missing or corrupt, the game generates a new config file with default values (questionTime = 15; extraTime = 5;).
+
+KEYBOARD CONTROLLS
+Enter: closes the question card being shown on the screen.
+Space (once): pauses the coundown timer while a question card is being displayed.
+Space (second time): starts the coundown timer for a small amount of extra time while a question card is being displayed.
