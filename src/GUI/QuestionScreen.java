@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Represents the screen shown upon opening a question card. Immediately upon
@@ -23,12 +25,15 @@ public class QuestionScreen extends JPanel {
     private static final int CORNER_SIZE = 250;
     private static final int COIN_SIZE = CORNER_SIZE/2;
 
-    private int backOpacity;
+    private static final Object CARD_HEIGHT_LOCK = new Object();
+    private static final Object COIN_ANIMATION_CYCLE_LOCK = new Object();
+
+    private AtomicInteger backOpacity = new AtomicInteger();
     private double cardHeight;
     private double coinAnimationCycle;
-    private int countdown;
-    private boolean countingDown = true;
-    private boolean firstTime = true;
+    private AtomicInteger countdown = new AtomicInteger();
+    private AtomicBoolean countingDown = new AtomicBoolean(true);
+    private AtomicBoolean firstTime = new AtomicBoolean(true);
     private Thread countdownThread;
 
     QuestionScreen(String question, int width, int height, MainScreen mainScreen){
@@ -124,19 +129,26 @@ public class QuestionScreen extends JPanel {
     }
 
     private void renderBackground(Graphics graphics){
-        graphics.setColor(new Color(0,0,0,backOpacity));
+        graphics.setColor(new Color(0,0,0,backOpacity.get()));
         graphics.fillRect(0,0,getWidth(),getHeight());
     }
     private void renderCard(Graphics graphics){
         graphics.setColor(MainScreen.FRAME_COLOR);
-        graphics.fillRoundRect(MARGIN,(int)(getHeight()/2-cardHeight/2),getWidth()-MARGIN*2,(int)cardHeight,CORNER_SIZE,CORNER_SIZE);
+        synchronized (CARD_HEIGHT_LOCK){
+            graphics.fillRoundRect(MARGIN,(int)(getHeight()/2-cardHeight/2),getWidth()-MARGIN*2,(int)cardHeight,CORNER_SIZE,CORNER_SIZE);
+        }
 
         graphics.setColor(MainScreen.FILLER_COLOR);
-        graphics.fillRoundRect(MARGIN+FRAME_WIDTH,(int)(getHeight()/2-cardHeight/2+FRAME_WIDTH),getWidth()-MARGIN*2-FRAME_WIDTH*2,(int)cardHeight-FRAME_WIDTH*2,CORNER_SIZE-FRAME_WIDTH,CORNER_SIZE-FRAME_WIDTH);
+        synchronized (CARD_HEIGHT_LOCK){
+            graphics.fillRoundRect(MARGIN+FRAME_WIDTH,(int)(getHeight()/2-cardHeight/2+FRAME_WIDTH),getWidth()-MARGIN*2-FRAME_WIDTH*2,(int)cardHeight-FRAME_WIDTH*2,CORNER_SIZE-FRAME_WIDTH,CORNER_SIZE-FRAME_WIDTH);
+        }
     }
     private void renderCoin(Graphics graphics){
         //Setting up correct shade of coin to emphasise 3D rotation
-        float shade = (float)coinAnimationCycle;
+        float shade;
+        synchronized (COIN_ANIMATION_CYCLE_LOCK){
+            shade = (float)coinAnimationCycle;
+        }
         if (shade > 1)
             shade = 1;
         else if (shade < 0)
@@ -144,14 +156,16 @@ public class QuestionScreen extends JPanel {
         shade = shade/2+0.5f;
 
         //Setting coin colour depending on time left
-        if (countdown < 5){
+        if (countdown.get() < 5){
             graphics.setColor(new Color(shade,0,0,1));
         }else{
             graphics.setColor(new Color((int)(MainScreen.FILLER_COLOR.getRed()*shade),(int)(MainScreen.FILLER_COLOR.getGreen()*shade),(int)(MainScreen.FILLER_COLOR.getBlue()*shade)));
         }
 
         //render coin
-        graphics.fillOval(getWidth()-FRAME_WIDTH*2-COIN_SIZE/2-(int)(COIN_SIZE* coinAnimationCycle)/2,FRAME_WIDTH,(int)(COIN_SIZE* coinAnimationCycle),COIN_SIZE);
+        synchronized (COIN_ANIMATION_CYCLE_LOCK){
+            graphics.fillOval(getWidth()-FRAME_WIDTH*2-COIN_SIZE/2-(int)(COIN_SIZE* coinAnimationCycle)/2,FRAME_WIDTH,(int)(COIN_SIZE* coinAnimationCycle),COIN_SIZE);
+        }
 
         //Transform (squish, to simulate 3D rotation) digit-text , then render on coin
         graphics.setColor(new Color((int)(MainScreen.TEXT_COLOR.getRed()*shade),(int)(MainScreen.TEXT_COLOR.getGreen()*shade),(int)(MainScreen.TEXT_COLOR.getBlue()*shade)));
@@ -161,17 +175,23 @@ public class QuestionScreen extends JPanel {
         int digitXPos;
         double translateX;
         AffineTransform transform = new AffineTransform();
-        if (countdown >= 9){ //double digit
+        if (countdown.get() >= 9){ //double digit
             digitXPos = getWidth()-COIN_SIZE;
-            translateX = -fontWidth*coinAnimationCycle + fontWidth;
+            synchronized (COIN_ANIMATION_CYCLE_LOCK){
+                translateX = -fontWidth*coinAnimationCycle + fontWidth;
+            }
         }else{ //single digit
             digitXPos = getWidth()-COIN_SIZE + 15;
-            translateX = -((double) fontWidth/2)*coinAnimationCycle + 20/*Actually half a char width of font, but this looks better*/;
+            synchronized (COIN_ANIMATION_CYCLE_LOCK){
+                translateX = -((double) fontWidth/2)*coinAnimationCycle + 20/*Actually half a char width of font, but this looks better*/;
+            }
         }
         transform.translate(translateX,0);
-        transform.scale(coinAnimationCycle,1);
+        synchronized (COIN_ANIMATION_CYCLE_LOCK){
+            transform.scale(coinAnimationCycle,1);
+        }
         graphics.setFont(digitFont.deriveFont(transform));
-        graphics.drawString(countdown + 1 + "",digitXPos,digitY);
+        graphics.drawString(countdown.get() + 1 + "",digitXPos,digitY);
     }
 
     /* Methods controlling the animation flow of various graphicsl components */
@@ -183,10 +203,12 @@ public class QuestionScreen extends JPanel {
             @Override
             public void actionPerformed(ActionEvent event) {
 
-                cardDist = (getHeight()-MARGIN*2) - cardHeight;
-                cardHeight += cardDist / 4;
+                synchronized (CARD_HEIGHT_LOCK){
+                    cardDist = (getHeight()-MARGIN*2) - cardHeight;
+                    cardHeight += cardDist / 4;
+                }
 
-                backOpacity += 10;
+                backOpacity.addAndGet(10);
 
                 if (Math.abs(cardDist) <= 5){
                     cut(event);
@@ -195,29 +217,35 @@ public class QuestionScreen extends JPanel {
             private void cut(ActionEvent event){
                 ((Timer)event.getSource()).stop();
                 requestFocus();
-                firstTime = false;
+                firstTime.set(false);
             }
         }).start();
     }
 
     void animateCountdown(int sec){
-        if (!firstTime)
-            backOpacity = 180;
+        if (!firstTime.get())
+            backOpacity.set(180);
         countdownThread = new Thread(() -> {
-            countingDown = true;
-            coinAnimationCycle = 0;
+            countingDown.set(true);
+            synchronized (COIN_ANIMATION_CYCLE_LOCK){
+                coinAnimationCycle = 0;
+            }
             int timeLeftMillis = sec * 1000;
             int delay = 10;
 
             while ((timeLeftMillis -= delay) > 0){
                 double coinDist = (double)((timeLeftMillis % 1000) - 500) / 12000;
-                coinAnimationCycle += coinDist;
-                countdown = timeLeftMillis/1000;
+                synchronized (COIN_ANIMATION_CYCLE_LOCK){
+                    coinAnimationCycle += coinDist;
+                }
+                countdown.set(timeLeftMillis/1000);
 
                 if (timeLeftMillis % 1000 == 0){
-                    coinAnimationCycle = 0;
+                    synchronized (COIN_ANIMATION_CYCLE_LOCK){
+                        coinAnimationCycle = 0;
+                    }
                     if (timeLeftMillis < 6000){
-                        backOpacity += 10;
+                        backOpacity.addAndGet(10);
                     }
                 }
 
@@ -225,18 +253,18 @@ public class QuestionScreen extends JPanel {
                     Thread.sleep(delay-1);
                 }catch(InterruptedException e){
                     System.out.println("CoinTimer interrupted by game host, the person");
-                    countingDown = false;
+                    countingDown.set(false);
                     return;
                 }
             }
-            countingDown = false;
+            countingDown.set(false);
         });
         countdownThread.start();
     }
 
     void stopCountdown(){
         countdownThread.interrupt();
-        countingDown = false;
+        countingDown.set(false);
     }
 
     private class KeyPadListener extends KeyAdapter{
@@ -246,7 +274,7 @@ public class QuestionScreen extends JPanel {
                 mainScreen.questionClosed();
             }else if (event.getKeyCode() == KeyEvent.VK_SPACE){
                 System.out.println("SPACE");
-                if (countingDown){
+                if (countingDown.get()){
                     mainScreen.countdownPaused();
                 }else{
                     stopCountdown();
