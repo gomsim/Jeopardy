@@ -44,7 +44,7 @@ public class QuestionScreen extends JPanel {
 
         addFormattedQuestionText(question);
 
-        startOpeningAnimation();
+        //startOpeningAnimation();
     }
 
     /* Methods and helper methods related to construction */
@@ -57,6 +57,7 @@ public class QuestionScreen extends JPanel {
         setBackground(new Color(0,0,0,0));
         requestFocus();
         addMouseListener(new MouseCatcher());
+        requestFocus();
     }
 
     private void setInvisibleCursor(){
@@ -196,71 +197,15 @@ public class QuestionScreen extends JPanel {
 
     /* Methods controlling the animation flow of various graphicsl components */
 
-    private void startOpeningAnimation(){
-        new Timer(8, new ActionListener() {
-            double cardDist;
-
-            @Override
-            public void actionPerformed(ActionEvent event) {
-
-                synchronized (CARD_HEIGHT_LOCK){
-                    cardDist = (getHeight()-MARGIN*2) - cardHeight;
-                    cardHeight += cardDist / 4;
-                }
-
-                backOpacity.addAndGet(10);
-
-                if (Math.abs(cardDist) <= 5){
-                    cut(event);
-                }
-            }
-            private void cut(ActionEvent event){
-                ((Timer)event.getSource()).stop();
-                requestFocus();
-                firstTime.set(false);
-            }
-        }).start();
+    void update(double cardHeight, int background){
+        synchronized (CARD_HEIGHT_LOCK){
+            this.cardHeight = cardHeight;
+        }
+        this.backOpacity.set(background);
+        //repaint();
     }
 
-    void animateCountdown(int sec){
-        if (!firstTime.get())
-            backOpacity.set(180);
-        countdownThread = new Thread(() -> {
-            countingDown.set(true);
-            synchronized (COIN_ANIMATION_CYCLE_LOCK){
-                coinAnimationCycle = 0;
-            }
-            int timeLeftMillis = sec * 1000;
-            int delay = 10;
 
-            while ((timeLeftMillis -= delay) > 0){
-                double coinDist = (double)((timeLeftMillis % 1000) - 500) / 12000;
-                synchronized (COIN_ANIMATION_CYCLE_LOCK){
-                    coinAnimationCycle += coinDist;
-                }
-                countdown.set(timeLeftMillis/1000);
-
-                if (timeLeftMillis % 1000 == 0){
-                    synchronized (COIN_ANIMATION_CYCLE_LOCK){
-                        coinAnimationCycle = 0;
-                    }
-                    if (timeLeftMillis < 6000){
-                        backOpacity.addAndGet(10);
-                    }
-                }
-
-                try{
-                    Thread.sleep(delay-1);
-                }catch(InterruptedException e){
-                    System.out.println("CoinTimer interrupted by game host, the person");
-                    countingDown.set(false);
-                    return;
-                }
-            }
-            countingDown.set(false);
-        });
-        countdownThread.start();
-    }
 
     void stopCountdown(){
         countdownThread.interrupt();

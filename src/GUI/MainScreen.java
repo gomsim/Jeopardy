@@ -90,11 +90,10 @@ public class MainScreen extends JFrame {
     public void showQuestionScreen(String question, String category, int y){
         cardLastShown = questionCards[getCategoryPos(category)][y];
 
-        GlassScreen glassScreen = new GlassScreen();
-        SwingUtilities.getRootPane(this).setGlassPane(glassScreen);
         QuestionScreen questionScreen = new QuestionScreen(question, getWidth(), getHeight(),this);
+        GlassScreen glassScreen = new GlassScreen(questionScreen);
+        SwingUtilities.getRootPane(this).setGlassPane(glassScreen);
         glassScreen.setVisible(true);
-        glassScreen.add(questionScreen);
         questionScreenBeingShown = questionScreen;
     }
     public void closeQuestionScreen(){
@@ -103,7 +102,7 @@ public class MainScreen extends JFrame {
         SwingUtilities.getRootPane(this).getGlassPane().setVisible(false);
     }
     public void showCountdown(int sec){
-        questionScreenBeingShown.animateCountdown(sec);
+        //questionScreenBeingShown.animateCountdown(sec);
     }
     public void pauseCountdown(){
         questionScreenBeingShown.stopCountdown();
@@ -217,10 +216,13 @@ public class MainScreen extends JFrame {
     /**
      * Used to overlay the QuestionScreen atop of this MainScreen.
      */
-    private static class GlassScreen extends JPanel{
-        GlassScreen(){
+    static class GlassScreen extends JPanel{
+        QuestionScreen questionScreen;
+        GlassScreen(QuestionScreen questionScreen){
             setLayout(null);
             setOpaque(false);
+            this.questionScreen = questionScreen;
+            add(questionScreen);
         }
     }
 

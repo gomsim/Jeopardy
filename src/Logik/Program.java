@@ -1,5 +1,6 @@
 package Logik;
 
+import GUI.AnimationHandler;
 import GUI.MainScreen;
 
 import java.awt.*;
@@ -12,6 +13,8 @@ public class Program {
     private QCardsDB database = new QCardsDB();
     private MainScreen[] graphicalInterfaces;
 
+    private AnimationHandler animationHandler;
+
     public Program(){
         ConfigFileHandler config = new ConfigFileHandler();
         questionTime = config.questionTime;
@@ -19,6 +22,10 @@ public class Program {
 
         setupDB(new GameFileHandler().getFileStream());
         setupGuis();
+        animationHandler = new AnimationHandler(graphicalInterfaces);
+        for (int i = 0; i < graphicalInterfaces.length; i++){
+            animationHandler.bakeOpeningAnimation(i);
+        }
     }
 
     /* Private methods used during set up */
@@ -113,7 +120,8 @@ public class Program {
         for (MainScreen gui: graphicalInterfaces){
             gui.showQuestionScreen(questionText, category, question);
         }
-        startFirstCountdown();
+        animationHandler.playOpeningAnimation();
+        //startFirstCountdown();
     }
     public void closeCard(){
         for (MainScreen gui: graphicalInterfaces){
