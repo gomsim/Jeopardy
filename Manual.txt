@@ -79,21 +79,24 @@ meta information such as answers and trivia can be stored in the game file for
 future reference. Would an entire entry be preceded by a #-sign the entry is 
 ignored by the game altogether.
 
+OBS! This means that the actual contents of questions and category names cannot 
+contain *-signs, #-signt or semi-colons (;).
+
 Example 1:
 
 --- start of game file, excluding this line ---
 *[Category name 1];
-[Question text].
+[Question text]
     #[Comment];
-[Question text].
+[Question text]
     #[Comment];
 
 *[Category2];
-[Question text].
+[Question text]
     #[Comment];
-[Question text].
+[Question text]
     #[Comment];
-#[Question text]. //NOT ADDED TO GAME BECAUSE OF PRECEEDING #
+#[Question text] //NOT ADDED TO GAME BECAUSE OF PRECEEDING #
     #[Comment];
 --- end of game file, excluding this line ---
 
@@ -187,4 +190,8 @@ Some categories have more questions than others.
     If you want to keep more questions in the game file than what you want to 
     show during a game session, make sure to comment out the questions you don't 
     want to be shown duwing the game. You do this by starting any unwanted 
-    question entry with a #-sign. 
+    question entry with a #-sign.
+My categories and questions are all grumbled.
+    Answer: Make sure you don't let the the actual contents of questions and 
+    category names contain *-signs, #-signt or semi-colons (;). These characters
+    are used to parse the files into the game.
