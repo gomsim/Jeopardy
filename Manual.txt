@@ -2,7 +2,15 @@ Written by Simon Gombrii
 
 Welcome to Jeopardy! A game of fun and joy!
 
-THE GAME
+1. CONTENTS:
+1. CONTENTS
+2. THE GAME
+3. THE SOFTWARE IMPLEMENTATION
+4. HOW TO WRITE A GAME FILE
+5. KEYBOARD CONTROLLS
+6. TROUBLESHOOT
+
+2. THE GAME
 Jeopardy is a great twist on a typical quiz. It's a game that lets the game host 
 give the answers while the players ask the questions. 
 
@@ -13,71 +21,74 @@ Start:
 The starting player is chosen at random. The player then chooses a card of a 
 difficulty of choice from one of the categories. Upon turning the card a 
 statement is presented, representing what would be the answer to an unknown 
-question. The players' job is then to guess what the question to the answer might 
-be. For example, "The jumping man wearing a red hat." might be the answer to 
-"Who is Super Mario?"
+question.
 
 Upon turning a card:
-While the choice of card was up to a certain player, any player has the chance
- to come up with a suggestion. The players have a set amount of time to think. 
- The first player to say their name (or in any way signalling they have an 
- answer, which has been agreed upon beforehand) will get to give their suggestion.
+The players' job is now to guess what the question to the answer might 
+be. For example, "The jumping man wearing a red hat." might be the answer to 
+"Who is Super Mario?". While the choice of card was up to a certain player, 
+any player has the chance to come up with a suggestion. The players have a 
+set amount of time to think. The first player to say their name (or in any 
+way signalling they have an answer, which has been agreed upon beforehand) 
+will get to give their suggestion.
 
 After a card:
-Would the player give the correct suggestion that player recieves the amount of 
-points shown on the question cars backside before turning it. This way the 
-choice of question becomes a balancing act between challenge and reward. However 
-would the player give the wrong suggestion, then the other players have a set 
-amount of time (usually shorter) to come up with their own suggestions. Would no 
-player come up with the right suggestion, either after one player has first 
-tried or without any player getting the chance to try, no one is given points, 
-the answer is revealed, and the game proceeds. The choice of the next card is 
-given to the player who came up with the right suggestion, alternatively if no 
-one got the right suggestion, to the player who chose the last card. 
-Additionally, giving a wrong suggestion subtracts the card's score from the 
-player's score.
+Would a player give the correct suggestion that player recieves the amount of 
+points shown on the question car's backside before turning it - This way the 
+choice of question becomes a balancing act between challenge and reward -. However 
+would a player give the wrong suggestion, then the other players have a set 
+amount of time (usually shorter) to come up with their own suggestions. Only one 
+more guess is allowed from any of the players. Would no player come up with the 
+right suggestion, either after one player has first tried or without any player 
+getting the chance to try, no one is given points. The answer is revealed by the 
+host and the game proceeds. The choice of the next card is given to the player who 
+came up with the right suggestion, alternatively if no one got the right suggestion, 
+to the player who chose the last card. Additionally, giving a wrong suggestion 
+subtracts the card's score from the player's score.
 
 The game is played until all cards are turned. The players' scores are then 
 counted. The winner is the player with the highest score.
 
-OBS! Despite Jeopardy's concept of the players guessing the questions to the 
-answers on the board, In this manual the text on the cards are referred to as 
-questions and the players' suggestions as answers, only for the sake of 
-readability.
+3. THE SOFTWARE IMPLEMENTATION
+OBS! Despite Jeopardy's concept of letting the players guess the questions to 
+the answers on the board, in this manual from now on, the text on the cards 
+are referred to as questions and the players' suggestions as answers, only for 
+the sake of readability (and writability).
 
-THE SOFTWARE IMPLEMENTATION
 Jeopardy is designed to detect the number of devices (computer or TV-screens) 
 connected to the computer at start-up. A GUI is created for each device 
 connected. The purpose of this is simply to hide the game host's mouse cursor 
 from the players. 
 Creator's suggestion: The host sits by the screen that the players will watch. 
 The host can then face the players to interact with them easily and pick up on 
-visual ques as to who got to the right answer first.
+visual ques as to who first got an answer.
 
 Upon start-up the host will choose a game to be played. The games listed are all 
 the *.game files in the games-directory. If desired, an example game can be 
-played as a demonstration.
+generated as a demonstration.
 
 Once started, the game board is shown. To turn a question card the host uses the 
 mouse to click on it. The corresponding question will then be displayed. 
 Simultaneously a countdown will start, shown in the upper right hand corner of 
-the display. The countdown can be stopped at any moment by pressing SPACE. 
-Pressing SPACE again starts a new countdown with a usually smaller amount of 
-time (can be changed in configurations). To close the card press ENTER.
+the display (The duration of this countdown is determined by the questionTime 
+variable in the configcurations file). The countdown can be paused at any moment 
+by pressing SPACE. Pressing SPACE again starts a new countdown with a usually 
+smaller amount of time (determined by the extraTime variable in the 
+configcurations file). To close the card press ENTER.
 
-HOW TO WRITE A GAME FILE
+4. HOW TO WRITE A GAME FILE
 Any game to be played must be a .game file and be located in the games-directory. 
-A game file file must be written to a very spcific description. A demonstration 
+Game files must be written to a very spcific description. A demonstration 
 example for how such a game file can be written can be generated by starting the 
-game and choosing the example game in the popup. A game file contains the 
+game and choosing the "example" game in the popup. A game file contains the 
 information about the game's categories and questions. The file is composed of a 
-series of statments separated by semo-colon (just like Java). Each entry 
+series of statments separated by semi-colons (just like Java). Each statement 
 represents either a category or a question. Categories are stated as *[category] 
 (ie. preceded by a *) while clues are stated as is. Everything in a statment 
 written after a #-sign is ignored by the game. It's "commented out". This way, 
 meta information such as answers and trivia can be stored in the game file for 
-future reference. Would an entire entry be preceded by a #-sign the entry is 
-ignored by the game altogether.
+future reference. Would an entire statement be preceded by a #-sign the statement 
+is ignored by the game altogether.
 
 OBS! This means that the actual contents of questions and category names cannot 
 contain *-signs, #-signt or semi-colons (;).
@@ -91,12 +102,12 @@ Example 1:
 [Question text]
     #[Comment];
 
-*[Category2];
+*[Category name 2];
 [Question text]
     #[Comment];
 [Question text]
     #[Comment];
-#[Question text] //NOT ADDED TO GAME BECAUSE OF PRECEEDING #
+#[Question text] #QUESTION NOT ADDED TO GAME BECAUSE OF PRECEEDING #
     #[Comment];
 --- end of game file, excluding this line ---
 
@@ -146,16 +157,17 @@ En union av styrka, visdom och mod.#Vad är Triforce;
 
 ...etc. Newlines and tabs are/can be added only for readability of file itself.
 
-Any number of categories and corresponding questions can be added, as long as 
-they follow the given format. The questions are added to the game in the order 
-they are stated in the game file.
+Remember: Any number of categories and corresponding questions can be added, as 
+long as they follow the given format. The questions are added to the game in the 
+order they are stated in the game file and the categories are added to the game
+in alphabetical order.
 
 CONFIG FILE
 The main folder contains a file config.txt which lets the host configure some 
 aspects of the game. As of today those things are the durations of the two 
-countdowns or time limits present in the game.
+countdowns/time limits in the game.
 
-Each entry in the config file are set in the following format: 
+Each statement in the config file is set in the following format: 
 "[variable] = [value]", excluding the citations.
 
 Variables:
@@ -167,31 +179,32 @@ activated by pausing the initial countdown and starting it again.
 Would the config file be missing or corrupt, the game generates a new config 
 file with default values (questionTime = 15; extraTime = 5;).
 
-KEYBOARD CONTROLLS
+5. KEYBOARD CONTROLLS
 Enter: closes a question card if shown on the screen.
-Space (once): pauses the coundown timer while a question card is being displayed.
-Space (second time): starts the coundown timer for a small amount of extra time 
+Space (once): pauses the coundown timer if a question card is being displayed.
+Space (second time): starts the coundown timer for an amount of extra time 
 while a question card is being displayed.
 
-TROUBLESHOOT
+6. TROUBLESHOOT
 The game presents fewer categories than is present in the game file.
     Answer: Each category myst have a unique name. Any two categories with the 
     same name are treated as the same category.
-The question cars look all mushed up on the main screen.
+The categoriy columns look all squished the main screen.
     Answer: The game runs best with up to 5 categories.
 The question cards are all thin. I can't read the numbers.
     Answer: Too many questions in a category will crowd the screen. Try creating 
     games with fewer questions per category. 10 or 15 questions per category is 
-    probably the maximum for an enjoyable game.
+    probably the maximum for an enjoyable game. If you want to store more questions
+    for a given category, comment out the questions you don't want in the current
+    game by preceding them with a #-sign in the game file.
 Some categories have more questions than others.
     Answer: Yes. Of some reason the game is designed to accomodate such 
     scenarios. If the game file contains more questions for certain categories 
     than others, those categories will contain more questions during the game. 
     If you want to keep more questions in the game file than what you want to 
     show during a game session, make sure to comment out the questions you don't 
-    want to be shown duwing the game. You do this by starting any unwanted 
-    question entry with a #-sign.
-My categories and questions are all grumbled.
+    want to be shown during the game by preceding them with a #-sign in the game file.
+The text of my categories and questions are cut off or too long.
     Answer: Make sure you don't let the the actual contents of questions and 
     category names contain *-signs, #-signt or semi-colons (;). These characters
     are used to parse the files into the game.
